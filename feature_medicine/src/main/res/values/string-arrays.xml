@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sorting_options_array">
+        <item>@string/by_alphabet_title</item>
+        <item>@string/by_expiration_date_title</item>
+        <item>@string/by_amount_title</item>
+    </string-array>
+</resources>

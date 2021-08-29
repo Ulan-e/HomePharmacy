@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/drugs_destination_fragment">
+
+    <fragment
+        android:id="@+id/drugs_destination_fragment"
+        android:name="com.example.feature_medicine.ui.MedicineFragment"
+        android:label="Лекарства"
+        tools:layout="@layout/fragment_drugs">
+        <action
+            android:id="@+id/action_drugs_destination_fragment_to_all_medicine_destination_fragment"
+            app:destination="@id/all_medicine_destination_fragment"
+            app:popUpTo="@id/drugs_destination_fragment" />
+        <action
+            android:id="@+id/action_drugs_destination_fragment_to_medicine_info_destionation_fragment"
+            app:destination="@id/medicine_info_destination_fragment"
+            app:popUpTo="@id/drugs_destination_fragment">
+
+            <argument
+                android:name="is_create_medicine"
+                android:defaultValue="false"
+                app:argType="boolean" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/calendar_destination_fragment"
+        android:name="com.example.feature_calendar.ui.CalendarFragment"
+        android:label="Календарь приёма"
+        tools:layout="@layout/fragment_calendar">
+    </fragment>
+    <fragment
+        android:id="@+id/all_medicine_destination_fragment"
+        android:name="com.example.feature_medicine.ui.AllMedicineFragment"
+        android:label="Все лекарства"
+        tools:layout="@layout/fragment_all_medicine" />
+
+    <fragment
+        android:id="@+id/medicine_info_destination_fragment"
+        android:name="com.example.feature_medicine.ui.MedicineInfoFragment"
+        android:label="fragment_medicine_info"
+        tools:layout="@layout/fragment_medicine_info">
+        <argument
+            android:name="is_create_medicine"
+            app:argType="boolean"
+            android:defaultValue="false" />
+
+        <argument
+            android:name="medicine"
+            app:argType="com.example.global_data.data.Medicine" />
+    </fragment>
+
+</navigation>

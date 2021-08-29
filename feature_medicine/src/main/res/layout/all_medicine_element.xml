@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="156dp"
+    android:layout_height="200dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/all_medicine_title"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:lineSpacingMultiplier="0.825"
+        android:text="@string/all_medicine_title"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:orientation="horizontal"
+        android:background="@drawable/medicine_warning_element_round_corners"
+        app:layout_constraintTop_toBottomOf="@id/all_medicine_title"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="24dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_medicine_red" />
+
+        <TextView
+            android:id="@+id/all_medicine_number"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginStart="4dp"
+            android:letterSpacing="-0.07"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            tools:text="13"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

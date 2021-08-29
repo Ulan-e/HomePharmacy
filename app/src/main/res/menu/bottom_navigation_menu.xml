@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/drugs_destination_fragment"
+        android:enabled="true"
+        android:icon="@drawable/drug_item_icon_selector"
+        android:title="@string/medicine_title"/>
+    <item
+        android:id="@+id/calendar_destination_fragment"
+        android:enabled="true"
+        android:title="@string/calendar_title"
+        android:icon="@drawable/calendar_item_icon_selector"/>
+</menu>

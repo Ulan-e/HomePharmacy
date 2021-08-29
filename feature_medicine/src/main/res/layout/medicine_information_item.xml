@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="76dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:background="@drawable/medicine_information_item_round_corners"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/all_medicine_warning_icon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="12dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_attention_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/medicine_item_attention_icon_divide_line"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/search_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/all_medicine_warning_icon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/medicine_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:letterSpacing="-0.04"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/medicine_amount_text"
+        app:layout_constraintStart_toStartOf="@id/medicine_item_attention_icon_divide_line"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Аквалотор норм" />
+
+    <TextView
+        android:id="@+id/medicine_amount_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/main_grey"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/medicine_item_attention_icon_divide_line"
+        app:layout_constraintTop_toBottomOf="@id/medicine_name_text"
+        tools:text="150мл." />
+
+    <View
+        android:id="@+id/medicine_item_info_divide_line"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/search_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/medicine_fresh_until_title"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/medicine_fresh_until_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:letterSpacing="-0.04"
+        android:text="@string/fresh_until_title"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/medicine_expiration_date_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        tools:text="Годен до:" />
+
+    <TextView
+        android:id="@+id/medicine_expiration_date_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/main_grey"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/medicine_item_info_divide_line"
+        app:layout_constraintTop_toBottomOf="@id/medicine_fresh_until_title"
+        app:layout_constraintVertical_bias="0"
+        tools:text="июнь 2023" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

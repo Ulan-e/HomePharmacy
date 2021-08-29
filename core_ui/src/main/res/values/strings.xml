@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="all_medicine_title">Все лекарства</string>
+    <string name="search_title">Поиск</string>
+    <string name="change_text">Изменить</string>
+    <string name="add_text">Добавить</string>
+    <string name="cancel_text">Отмена</string>
+    <string name="new_medicine_text">Новое лекарство</string>
+    <string name="added_new_medicine_text">Новое лекарство добавлено</string>
+    <string name="okey">Хорошо</string>
+    <string name="ready">Готово</string>
+</resources>

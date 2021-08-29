@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="medicine_title">Лекарства</string>
+    <string name="categories_title">Категории</string>
+    <string name="by_alphabet_title">По алфавиту</string>
+    <string name="by_expiration_date_title">По сроку годности</string>
+    <string name="by_amount_title">По количеству</string>
+    <string name="fresh_until_title">Годен до:</string>
+    <string name="medicine_name_title_text">Название лекарства</string>
+    <string name="medicine_name_hint_text">Название</string>
+    <string name="type_title_text">Тип</string>
+    <string name="category_title_text">Категория</string>
+    <string name="instruction_text">Инструкция</string>
+    <string name="search_text">Поиск</string>
+    <string name="max_amount_title_text">Количество в упаковке</string>
+    <string name="current_amount_title_text">Оставшееся количество</string>
+    <string name="oftenness_of_taking_title_text">Частота приёма</string>
+    <string name="how_many_times_a_day_title_text">Сколько раз в день</string>
+    <string name="how_many_times_a_week_title_text">Сколько раз в неделю</string>
+    <string name="finishing_date_title_text">Завершения приёма</string>
+    <string name="notes_title_text">Заметки</string>
+    <string name="date_text_title">Дата</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_medicine">Удалить препарат</string>
+    <string name="delete_medicine_confirmation">Информация об этом препарате будет удалена. Уверены,  что хотите продолжить? </string>
+    <string name="text_save_data_in_calendar">Сохранить данные о приемах в календаре </string>
+</resources>

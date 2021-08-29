@@ -1,0 +1,54 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.HomePharmacy" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="materialCalendarTheme">@style/CalendarTheme</item>
+    </style>
+
+
+    <style name="Toolbar">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="GreenRecycleViewTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/main_green</item>
+    </style>
+
+    <style name="GreyRecycleViewTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/main_grey</item>
+    </style>
+
+    <style name="CalendarTheme" parent="Widget.MaterialComponents.MaterialCalendar">
+        <item name="daySelectedStyle">@style/CalendarViewDaySelectedStyle</item>
+    </style>
+
+    <style name="CalendarViewDaySelectedStyle" parent="Widget.MaterialComponents.MaterialCalendar.Day.Selected">
+        <item name="itemFillColor">@color/main_green</item>
+        <item name="itemTextColor">@color/black</item>
+        <item name="itemStrokeWidth">0dp</item>
+    </style>
+
+    <style name="CalendarViewCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="SortingSpinnerTheme" parent="Widget.AppCompat.Spinner">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:backgroundTint">@color/black</item>
+    </style>
+
+    <style name="CustomMedicineInfoToolbarTextAppearance" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="CustomMedicineInfoRowTextAppearance" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="android:textFontWeight">450</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+</resources>
