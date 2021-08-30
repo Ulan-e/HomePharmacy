@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calendar_id"
+    app:startDestination="@id/calendar_destination_fragment">
+
+    <fragment
+        android:id="@+id/calendar_destination_fragment"
+        android:name="com.example.feature_calendar.ui.CalendarFragment"
+        android:label="Календарь приёма"
+        tools:layout="@layout/fragment_calendar" />
+</navigation>

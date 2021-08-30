@@ -18,6 +18,7 @@ import com.example.feature_medicine.data.MedicineRepository
 import com.example.feature_medicine.databinding.FragmentDrugsBinding
 import com.example.feature_medicine.domain.MainViewModel
 import com.example.feature_medicine.domain.MedicineViewModelFactory
+import com.example.global_data.data.Medicine
 import com.example.global_data.data.MedicineDatabase
 
 class MedicineFragment : Fragment() {
@@ -48,7 +49,8 @@ class MedicineFragment : Fragment() {
         categoriesRecyclerView = binding.categoriesRecyclerView
 
         medicineToolbar?.setOnClickListenerAddButton {
-            findNavController().navigate(R.id.medicine_info_destination_fragment)
+            val action = MedicineFragmentDirections.actionDrugsDestinationFragmentToMedicineInfoDestionationFragment(true, Medicine())
+            findNavController().navigate(action)
         }
 
         notificationsRecyclerView?.adapter = MedicineWarningElementAdapter().apply {

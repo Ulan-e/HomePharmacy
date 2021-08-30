@@ -37,19 +37,9 @@ class MedicineInfoFragment : Fragment() {
         const val TYPE_RADIO_GROUP_ID = 11
         const val CATEGORIES_RADIO_GROUP_ID = 12
         const val OFTENNESS_RADIO_GROUP_ID = 13
-
-        private const val IS_CREATE_MEDICINE = "is_create_medicine"
-        private const val MEDICINE_ARG = "medicine_arg"
-
-        fun newInstance(isCreated: Boolean, medicine: Medicine) = MedicineInfoFragment().apply {
-            arguments = Bundle(2).apply {
-                putBoolean(IS_CREATE_MEDICINE, isCreated)
-                putParcelable(MEDICINE_ARG, medicine)
-            }
-        }
     }
 
-    private val itemInfo: Medicine = Medicine()
+    private lateinit var itemInfo: Medicine
     private lateinit var model: MainViewModel
 
     private var _binding: FragmentMedicineInfoBinding? = null
@@ -70,7 +60,11 @@ class MedicineInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val edit  = MedicineInfoFragment
+        val args = MedicineInfoFragmentArgs.fromBundle(requireArguments())
+        val isCreateMedicine = args.isCreateMedicine
+        val medicine = args.medicine
+
+        itemInfo = medicine
         val medicineRepository: MedicineRepository by lazy {
             MedicineRepository(MedicineDatabase.getInstance(requireContext()))
         }
@@ -78,15 +72,19 @@ class MedicineInfoFragment : Fragment() {
         model = ViewModelProvider(this, medicineViewModelFactory).get(MainViewModel::class.java)
 
         binding.apply {
+            medicineInfoCustomToolbar.setBackTitleVisibility(!isCreateMedicine)
+            setEditModeEnable(isCreateMedicine)
+            Log.d("nalu", "isCreateMedicine $isCreateMedicine")
 
-            val isMedicineInfo = arguments?.getBoolean(IS_CREATE_MEDICINE)
-            val medicine: Medicine? = arguments?.getParcelable(MEDICINE_ARG)
+            setMedicine(medicine)
 
-            if (isMedicineInfo == true) {
-                setEditModeEnable(false)
-                medicine?.let { setMedicine(it) }
-            } else {
-                setEditModeEnable(true)
+            if (isCreateMedicine) {
+                medicineInfoCustomToolbar.setCenterTitle(getString(R.string.new_medicine_text))
+                btnDelete.visibility = View.GONE
+                medicineInfoCustomToolbar.setRightButtonTitle(getString(R.string.add_text))
+            }else{
+                btnDelete.visibility = View.VISIBLE
+                medicineInfoCustomToolbar.setRightButtonTitle(getString(R.string.change_text))
             }
 
             initBottomSheetDialog()
@@ -95,20 +93,26 @@ class MedicineInfoFragment : Fragment() {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
 
-            medicineInfoCustomToolbar.setOnClickListenerBackButton {
-                Navigation.findNavController(view).popBackStack()
+            medicineInfoCustomToolbar.setOnClickListenerBackButton(isCreateMedicine) {
+                if(isCreateMedicine) Navigation.findNavController(view).popBackStack()
+                else Navigation.findNavController(view).popBackStack()
             }
 
             medicineInfoCustomToolbar.setOnClickListenerRightButton {
-                if (checkFields()) {
-                    itemInfo.id = Random().nextInt()
-                    itemInfo.medicineName = medicineNameRowEditText.text.toString()
-                    itemInfo.medicineMaxAmount = zEditTextMaxAmount.text.toString()
-                    itemInfo.medicineCurrentAmount = zEditTextCurrentAmount.text.toString().toInt()
-                    model.insertMedicine(itemInfo)
-                    showSuccessCreatedMedicine(view)
+                if (isCreateMedicine) {
+                    medicineInfoCustomToolbar.setRightButtonTitle(getString(R.string.add_text))
+                    Log.d("nalu", " medicineInfoCustomToolbar.setRightButtonTitle(getString(R.string.add_text)")
+                    addMedicine()
                 } else {
-                    Snackbar.make(binding.root, "Заполните все поля", Snackbar.LENGTH_SHORT).show()
+                    Log.d("nalu", "medicineInfoCustomToolbar.setRightButtonTitle(getString(R.string.ready)")
+                    medicineInfoCustomToolbar.setRightButtonTitle(getString(R.string.ready))
+                    setEditModeEnable(isEnable = true)
+                    medicineInfoCustomToolbar.setOnClickListenerBackButton(true){
+                        Navigation.findNavController(view).popBackStack()
+                    }
+                    medicineInfoCustomToolbar.setOnClickListenerRightButton{
+                        addMedicine()
+                    }
                 }
             }
 
@@ -207,6 +211,19 @@ class MedicineInfoFragment : Fragment() {
             }
         }
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+    }
+
+    private fun addMedicine() = with(binding) {
+        if (checkFields()) {
+            itemInfo.id = Random().nextInt()
+            itemInfo.medicineName = medicineNameRowEditText.text.toString()
+            itemInfo.medicineMaxAmount = zEditTextMaxAmount.text.toString()
+            itemInfo.medicineCurrentAmount = zEditTextCurrentAmount.text.toString().toInt()
+            model.insertMedicine(itemInfo)
+            showSuccessCreatedMedicine(binding.root)
+        } else {
+            Snackbar.make(binding.root, "Заполните все поля", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     private fun fullingARadioGroup(strings: ArrayList<String>, radioGroup: RadioGroup, radioGroupId: Int) {
@@ -315,14 +332,15 @@ class MedicineInfoFragment : Fragment() {
     }
 
     private fun setMedicine(medicine: Medicine) = with(binding) {
-        medicineInfoCustomToolbar.setTitle(medicine.medicineName)
+        medicineInfoCustomToolbar.setCenterTitle(medicine.medicineName)
         medicineNameRowEditText.setText(medicine.medicineName)
         zTextViewType.text = medicine.medicineType
         zTextViewCategory.text = medicine.medicineCategory
         zEditTextMaxAmount.setText(medicine.medicineMaxAmount)
         zTextViewFreshUntil.text = medicine.expirationDate
-        zEditTextCurrentAmount.setText(medicine.medicineCurrentAmount)
+        zEditTextCurrentAmount.setText(medicine.medicineCurrentAmount.toString())
         zTextViewTakingOftenness.text = medicine.medicineTakingOftenness
+        zTextViewFinishingDate.text = medicine.finishingTakingDate
     }
 
     private fun setEditModeEnable(isEnable: Boolean) = with(binding) {
@@ -336,6 +354,13 @@ class MedicineInfoFragment : Fragment() {
         imageButtonFinishingDate.isEnabled = isEnable
         imageButtonInstruction.isEnabled = isEnable
         imageButtonFreshUntil.isEnabled = isEnable
+        imageButtonInstruction.isEnabled = isEnable
+        freshUntilTextView.isEnabled = isEnable
+        zEditTextMaxAmount.isEnabled = isEnable
+        zEditTextAmountPerUnit.isEnabled = isEnable
+        zTextViewFinishingDate.isEnabled = isEnable
+        zTextViewFreshUntil.isEnabled = isEnable
+        notesText.isEnabled = isEnable
     }
 
     private fun openWebMedicineInstruction() {

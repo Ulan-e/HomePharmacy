@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.example.feature_medicine.ui.MedicineFragment
+import com.example.feature_medicine.ui.MedicineFragmentDirections
 import com.example.homepharmacy.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController //getting navController for navigation in the ap
 
         val mainBottomNavigator = binding.mainActivityBottomNavigation
-        mainBottomNavigator.itemIconTintList = null //setting icon color to null, because otherwise they would whole
-        NavigationUI.setupWithNavController(mainBottomNavigator, navController) //connecting bottomNavigationView to navController for it's auto update
+        mainBottomNavigator.itemIconTintList = null // setting icon color to null, because otherwise they would whole
+        NavigationUI.setupWithNavController(mainBottomNavigator, navController) // connecting bottomNavigationView to navController for it's auto update
     }
 }

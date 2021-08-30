@@ -25,11 +25,15 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"/>
 
-        <com.example.core_ui.CustomSearchBar
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="12dp"
             android:layout_width="0dp"
+            android:background="@drawable/search_bar_round_corners"
+            app:searchIcon="@drawable/ic_loupe_grey"
             android:layout_height="44dp"
+            app:queryHint="@string/search_title"
             app:layout_constraintStart_toEndOf="@id/all_medicine_back_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

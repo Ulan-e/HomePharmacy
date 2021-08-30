@@ -11,7 +11,7 @@ abstract class MedicineDatabase : RoomDatabase() {
     abstract fun medicinesDao(): MedicinesDao
 
     companion object {
-        private const val DATABASE_NAME = "medicine"
+        private const val DATABASE_NAME = "medicine_d"
 
         @Volatile
         private var instance: MedicineDatabase? = null
