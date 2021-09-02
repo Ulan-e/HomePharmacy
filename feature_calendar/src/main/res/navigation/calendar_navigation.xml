@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/calendar_destination_fragment"
-        android:name="com.example.feature_calendar.ui.CalendarFragment"
+        android:name="com.example.feature_calendar.ui.ui.CalendarFragment"
         android:label="Календарь приёма"
         tools:layout="@layout/fragment_calendar" />
 </navigation>

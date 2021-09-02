@@ -2,7 +2,6 @@ package com.example.feature_medicine.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,16 +22,21 @@ import com.example.feature_medicine.databinding.FragmentAllMedicineBinding
 import com.example.feature_medicine.domain.MainViewModel
 import com.example.feature_medicine.domain.MedicineViewModelFactory
 import com.example.global_data.data.Medicine
-import com.example.global_data.data.MedicineDatabase
-import com.example.homepharmacy.hideKeyboard
+import com.example.global_data.data.db.MedicineDatabase
 import java.text.SimpleDateFormat
 
 class AllMedicineFragment : Fragment(), SearchView.OnQueryTextListener {
+
+    companion object {
+        public const val TYPE_ALL = "all"
+    }
 
     private lateinit var binding: FragmentAllMedicineBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var medicineSortingSpinner: Spinner
     private lateinit var medicineAdapter: MedicineAdapter
+    private var category: String = TYPE_ALL
+    private var isSearchMode: Boolean = false
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -49,11 +53,27 @@ class AllMedicineFragment : Fragment(), SearchView.OnQueryTextListener {
         val medicineViewModelFactory = MedicineViewModelFactory(medicineRepository)
         mainViewModel = ViewModelProvider(this, medicineViewModelFactory).get(MainViewModel::class.java)
 
-        mainViewModel.localMedicines.observe(viewLifecycleOwner, { medicineInfoItemsList ->
-            initRecyclerView(medicineInfoItemsList as ArrayList<Medicine>)
-        })
-
+        val args = AllMedicineFragmentArgs.fromBundle(requireArguments())
+        category = args.category
+        isSearchMode = args.isSearchMode
         binding = FragmentAllMedicineBinding.bind(view).apply {
+
+            if (isSearchMode) {
+                allMedicineCustomToolbar.setClickListenerSearchView()
+            }
+
+            if (category != TYPE_ALL) {
+                mainViewModel.localMedicines.observe(viewLifecycleOwner, { results ->
+                    val filteredList = results.filter { it.medicineCategory == category }
+                    initRecyclerView(filteredList as ArrayList<Medicine>)
+                    allTitle.text = category
+                })
+            } else {
+                mainViewModel.localMedicines.observe(viewLifecycleOwner, { medicineInfoItemsList ->
+                    initRecyclerView(medicineInfoItemsList as ArrayList<Medicine>)
+                })
+            }
+
             allMedicineCustomToolbar.setOnClickListenerBackButton {
                 Navigation.findNavController(view).popBackStack()
             }
@@ -92,14 +112,14 @@ class AllMedicineFragment : Fragment(), SearchView.OnQueryTextListener {
                         medicineAdapter.notifyDataSetChanged()
                     }
                     BY_EXPIRING_DATE -> {
-                         medicineAdapter.medicinesList.sortWith(compareBy {
-                             convertDateToLongInMillis(it.expirationDate)
-                         })
-                         medicineAdapter.notifyDataSetChanged()
+                        medicineAdapter.medicinesList.sortWith(compareBy {
+                            convertDateToLongInMillis(it.expirationDate)
+                        })
+                        medicineAdapter.notifyDataSetChanged()
                     }
                     BY_AMOUNT -> {
-                         medicineAdapter.medicinesList.sortWith(compareBy { it.medicineCurrentAmount })
-                         medicineAdapter.notifyDataSetChanged()
+                        medicineAdapter.medicinesList.sortWith(compareBy { it.medicineCurrentAmount })
+                        medicineAdapter.notifyDataSetChanged()
                     }
                 }
             }
@@ -111,14 +131,13 @@ class AllMedicineFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun convertDateToLongInMillis(stringDate: String): Long{
+    private fun convertDateToLongInMillis(stringDate: String): Long {
         val simpleStringToDataFormat = SimpleDateFormat("dd/MM/yy")
         val dateToConvert = simpleStringToDataFormat.parse(stringDate)
         return dateToConvert.time
     }
 
     private fun initRecyclerView(list: ArrayList<Medicine>) {
-        for (i in list) { Log.d("med", "fetched lekartvo = ${i}") }
         medicineAdapter.setData(list)
         medicineAdapter.notifyDataSetChanged()
     }

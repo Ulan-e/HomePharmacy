@@ -19,12 +19,12 @@ import com.example.feature_medicine.databinding.FragmentDrugsBinding
 import com.example.feature_medicine.domain.MainViewModel
 import com.example.feature_medicine.domain.MedicineViewModelFactory
 import com.example.global_data.data.Medicine
-import com.example.global_data.data.MedicineDatabase
+import com.example.global_data.data.db.MedicineDatabase
 
 class MedicineFragment : Fragment() {
 
     lateinit var binding: FragmentDrugsBinding
-    lateinit var mainViewModel: MainViewModel
+    var mainViewModel: MainViewModel? = null
 
     private var medicineToolbar: MedicineCustomToolbar? = null
     private var notificationsRecyclerView: RecyclerView? = null
@@ -43,6 +43,15 @@ class MedicineFragment : Fragment() {
         mainViewModel = ViewModelProvider(this, medicineViewModelFactory).get(MainViewModel::class.java)
         binding = FragmentDrugsBinding.bind(view)
 
+        mainViewModel?.localMedicines?.observe(viewLifecycleOwner, {
+            (notificationsRecyclerView?.adapter as MedicineWarningElementAdapter).setAllMedicinesSize(it.size)
+        })
+
+       /* binding.medicineSearchBar.setOnFocusListener {
+             val action = MedicineFragmentDirections.actionDrugsDestinationFragmentToAllMedicineDestinationFragment("all", true)
+            findNavController().navigate(action)
+        }*/
+
         //initializing views
         medicineToolbar = binding.medicineToolbar
         notificationsRecyclerView = binding.notificationsRecyclerView
@@ -54,10 +63,14 @@ class MedicineFragment : Fragment() {
         }
 
         notificationsRecyclerView?.adapter = MedicineWarningElementAdapter().apply {
-            onAllMedicineItemClick = { findNavController().navigate(R.id.all_medicine_destination_fragment) }
+            onAllMedicineItemClick = {
+                val action = MedicineFragmentDirections.actionDrugsDestinationFragmentToAllMedicineDestinationFragment("all", false)
+                findNavController().navigate(action)
+            }
         }
+
         //creating an observer that will monitor if medicineWarningElements had changed
-        mainViewModel.medicines.observe(viewLifecycleOwner, { medicinesList ->
+        mainViewModel?.warningMedicines?.observe(viewLifecycleOwner, { medicinesList ->
             (notificationsRecyclerView?.adapter as MedicineWarningElementAdapter).medicineWarningElements.clear()
             (notificationsRecyclerView?.adapter as MedicineWarningElementAdapter).medicineWarningElements.addAll(medicinesList)
             (notificationsRecyclerView?.adapter as MedicineWarningElementAdapter).notifyDataSetChanged()
@@ -68,17 +81,18 @@ class MedicineFragment : Fragment() {
             setDrawable(ResourcesCompat.getDrawable(resources, R.drawable.recycle_view_horizontal_separation_drawable, null)!!)
         })
 
-        categoriesRecyclerView?.adapter = MedicineCategoriesAdapter()
+        categoriesRecyclerView?.adapter = MedicineCategoriesAdapter(object : MedicineCategoriesAdapter.Listener {
+            override fun onItemClick(category: String) {
+                val action = MedicineFragmentDirections.actionDrugsDestinationFragmentToAllMedicineDestinationFragment(category, false)
+                findNavController().navigate(action)
+            }
+
+        })
         //creating an observer for categories list
-        mainViewModel.categories.observe(viewLifecycleOwner, { categoriesList ->
+        mainViewModel?.categories?.observe(viewLifecycleOwner, { categoriesList ->
             (categoriesRecyclerView?.adapter as MedicineCategoriesAdapter).categoriesNames.clear()
             (categoriesRecyclerView?.adapter as MedicineCategoriesAdapter).categoriesNames.addAll(categoriesList)
             (categoriesRecyclerView?.adapter as MedicineCategoriesAdapter).notifyDataSetChanged()
-        })
-
-        mainViewModel.personalMedicineNumber.observe(viewLifecycleOwner, { personalMedicineNumber ->
-            (notificationsRecyclerView?.adapter as MedicineWarningElementAdapter).personalMedicineNumber = personalMedicineNumber
-            (notificationsRecyclerView?.adapter as MedicineWarningElementAdapter).notifyDataSetChanged()
         })
 
         //adding item decoration to categoriesRecyclerView

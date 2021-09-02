@@ -12,6 +12,7 @@ import com.example.feature_medicine.databinding.CategoryElementBinding
 import com.example.feature_medicine.ui.MedicineCategoriesAdapter.*
 
 class MedicineCategoriesAdapter(
+        private val listener: Listener
 ) : RecyclerView.Adapter<ViewHolder>() {
 
     val categoriesNames: ArrayList<String> = arrayListOf()
@@ -29,5 +30,12 @@ class MedicineCategoriesAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.categoryButton.text = categoriesNames[position]
         holder.binding.categoryButton.background = ColorDrawable(Color.TRANSPARENT)
+        holder.binding.categoryButton.setOnClickListener {
+            listener.onItemClick(categoriesNames[position])
+        }
+    }
+
+    interface Listener{
+        fun onItemClick(category: String)
     }
 }

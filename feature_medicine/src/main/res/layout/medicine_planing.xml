@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/base_medicine_info_big_element"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="16dp"
+    android:background="@drawable/medicine_info_big_element_round_corners"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/first"
+        style="@style/CustomMedicineInfoRowTextAppearance"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:gravity="center_vertical"
+        tools:ignore="RelativeOverlap"
+        tools:text="Когда" />
+
+    <ImageButton
+        android:id="@+id/first_arrow"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/selectableItemBackground"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_arrow_right" />
+
+    <View
+        android:id="@+id/z_1_divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/first"
+        android:layout_marginStart="16dp"
+        android:background="@color/search_grey"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/second"
+        style="@style/CustomMedicineInfoRowTextAppearance"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@+id/z_1_divide_line"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:gravity="center_vertical"
+        android:text="@string/type_title_text"
+        tools:text="Тип" />
+
+    <ImageButton
+        android:id="@+id/second_arrow"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/z_1_divide_line"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/selectableItemBackground"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_arrow_right" />
+
+    <View
+        android:id="@+id/z_2_divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/second"
+        android:layout_marginStart="16dp"
+        android:background="@color/search_grey"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/third"
+        style="@style/CustomMedicineInfoRowTextAppearance"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@id/z_2_divide_line"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:gravity="center_vertical"
+        android:text="@string/category_title_text"
+        tools:text="Категория" />
+
+    <ImageButton
+        android:id="@+id/third_arrow"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/z_2_divide_line"
+        android:layout_alignParentEnd="true"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_arrow_right" />
+
+    <View
+        android:id="@+id/z_3_divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/third"
+        android:layout_marginStart="16dp"
+        android:background="@color/search_grey"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/fourth"
+        style="@style/CustomMedicineInfoRowTextAppearance"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@id/z_3_divide_line"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:gravity="center_vertical"
+        android:text="@string/instruction_text" />
+
+    <ImageButton
+        android:id="@+id/fourth_arrow"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/z_3_divide_line"
+        android:layout_alignParentEnd="true"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_arrow_right" />
+
+</RelativeLayout>

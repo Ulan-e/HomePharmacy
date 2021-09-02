@@ -3,9 +3,9 @@ package com.example.feature_medicine.data
 import android.annotation.SuppressLint
 import android.util.Log
 import com.example.feature_medicine.R
+import com.example.global_data.data.db.Event
 import com.example.global_data.data.Medicine
-import com.example.global_data.data.MedicineDatabase
-import com.example.global_data.data.PersonalMedicineRepository
+import com.example.global_data.data.db.MedicineDatabase
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -24,19 +24,14 @@ class MedicineRepository(
         private const val MEDICINE_EXPIRED: Int = 4
     }
 
-    private var personalMedicineRepository: PersonalMedicineRepository = PersonalMedicineRepository()
-
+    private var medicines = mutableListOf<Medicine>()
+    private var events = mutableListOf<Event>()
     private val emptyElement = MedicineWarningElement(R.drawable.ic_example_capsules_warning, "", "")
 
     //default stuff
     val medicineCategoriesList = arrayListOf("Аллергия", "Covid-19", "Витамины и БАД", "Гастрит", "Диабет", "Дыхательная система", "Зрение", "Избыточный вес", "Изжога", "Кожные заболевания", "Личная гигиена", "Насморк", "Отит", "Проблемы с пищеварением и кишечником", "Простуда и грипп", "Сердечно-сосудистые", "Другое")
-    val medicineTypeList = arrayListOf("Ампулы", "Граммы", "Дозы спрея", "Ингаляции", "Инъекции", "Использования", "Капли", "Капсулы", "Милиграммы", "Миллилитры", "Пакетики", "Пластыри", "Свечи", "Талетки", "Штуки")
+    val medicineTypeList = arrayListOf("Ампулы", "Граммы", "Дозы спрея", "Ингаляции", "Инъекции", "Использования", "Капли", "Капсулы", "Милиграммы", "Миллилитры", "Пакетики", "Пластыри", "Свечи", "Таблетки", "Штуки")
     val oftennessList = arrayListOf("Ежедневно", "Еженедельно", "По необходимости")
-
-    //changing elements
-    var medicineWarningElementsList = getMedicineWarningElementsList()
-    var personalMedicineNumber = personalMedicineRepository.medicineWholeData.size
-    var medicineInfoItemsList: ArrayList<MedicineInfoItem> = getMedicineInfoElementsList()
 
     private fun getStringFromItemType(medicineType: String): String {
         when (medicineType) {
@@ -55,7 +50,7 @@ class MedicineRepository(
     @SuppressLint("SimpleDateFormat")
     private fun getMedicineInfoElementsList(): ArrayList<MedicineInfoItem> {
         val medicineInfoItemsList: ArrayList<MedicineInfoItem> = arrayListOf()
-        for (item in personalMedicineRepository.medicineWholeData) {
+        for (item in medicines) {
             val message = isMedicineItemHasWarning(item)
 
             val amountNumber: Int = if (item.isAmountCountable) {
@@ -86,28 +81,15 @@ class MedicineRepository(
 
     @JvmName("getMedicineWarningElementsList1")
     @SuppressLint("SimpleDateFormat")
-    private fun getMedicineWarningElementsList(): ArrayList<MedicineWarningElement> {
-
+    fun getMedicineWarningElementsList(list: List<Medicine>): ArrayList<MedicineWarningElement> {
         val medicineWarningElementsList: ArrayList<MedicineWarningElement> = arrayListOf(emptyElement)
         val secondsInAMonth: Long = 30 * 24 * 60 * 60
         val dateFormat = SimpleDateFormat("dd/MM/yy")
 
-        for (item in personalMedicineRepository.medicineWholeData) {
+        for (item in list) {
             //checking for date expiration
             val currentDate = Date()
             val expirationDate = dateFormat.parse(item.expirationDate)
-
-            if (expirationDate.time - currentDate.time <= 0) {
-                medicineWarningElementsList.add(MedicineWarningElement(R.drawable.ic_example_capsules_warning,
-                        "Срок годности истёк",
-                        item.medicineName))
-                continue
-            } else if ((expirationDate.time - currentDate.time) / 1000 <= secondsInAMonth) {
-                medicineWarningElementsList.add(MedicineWarningElement(R.drawable.ic_example_capsules_warning,
-                        "Срок годности истекает",
-                        item.medicineName))
-                continue
-            }
 
             //checking if there are drugs left
             if (item.isAmountCountable) {
@@ -122,6 +104,18 @@ class MedicineRepository(
                             item.medicineName))
                     continue
                 }
+            }
+
+            if (expirationDate.time - currentDate.time <= 0) {
+                medicineWarningElementsList.add(MedicineWarningElement(R.drawable.ic_example_capsules_warning,
+                        "Срок годности истёк",
+                        item.medicineName))
+                continue
+            } else if ((expirationDate.time - currentDate.time) / 1000 <= secondsInAMonth) {
+                medicineWarningElementsList.add(MedicineWarningElement(R.drawable.ic_example_capsules_warning,
+                        "Срок годности истекает",
+                        item.medicineName))
+                continue
             }
         }
         return medicineWarningElementsList
@@ -151,22 +145,35 @@ class MedicineRepository(
         return NO_WARNING
     }
 
-    fun notifyDataChanged() {
-        personalMedicineRepository = PersonalMedicineRepository()
-        medicineWarningElementsList = getMedicineWarningElementsList()
-        personalMedicineNumber = personalMedicineRepository.medicineWholeData.size
-        medicineInfoItemsList = getMedicineInfoElementsList()
-    }
-
     suspend fun getMedicinesList(): List<Medicine> {
         val medicines = medicineDatabase.medicinesDao().fetchAll()
+        this.medicines.clear()
+        this.medicines.addAll(medicines)
         Log.d(TAG, "Size of medicines ${medicines.size}")
         return medicines
+    }
+
+    suspend fun getEventsList(): List<Event> {
+        val events = medicineDatabase.eventsDao().fetchAll()
+        this.events.clear()
+        this.events.addAll(events)
+        Log.d(TAG, "Size of events ${events.size}")
+        return events
     }
 
     suspend fun insertMedicine(medicine: Medicine) {
         medicineDatabase.medicinesDao().insert(medicine)
         Log.d(TAG, "inserted medicine $medicine")
+    }
+
+    suspend fun updateMedicine(medicine: Medicine) {
+        medicineDatabase.medicinesDao().update(medicine)
+        Log.d(TAG, "update medicine $medicine")
+    }
+
+    suspend fun insertEvent(event: Event) {
+        medicineDatabase.eventsDao().insert(event)
+        Log.d(TAG, "inserted event $event")
     }
 
     suspend fun deleteMedicine(medicine: Medicine){

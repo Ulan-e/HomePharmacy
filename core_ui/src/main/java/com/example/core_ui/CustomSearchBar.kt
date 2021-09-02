@@ -20,4 +20,12 @@ class CustomSearchBar
         this.background = ColorDrawable(Color.TRANSPARENT)
         _binding?.searchBarText?.background = ColorDrawable(Color.TRANSPARENT)
     }
+
+    fun setOnFocusListener(click: (() -> Unit)? = null) {
+        _binding?.searchBarText?.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                click?.invoke()
+            }
+        }
+    }
 }

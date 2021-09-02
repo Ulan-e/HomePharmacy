@@ -70,7 +70,7 @@
                         android:backgroundTint="@color/white"
                         android:gravity="center_vertical"
                         android:hint="@string/medicine_name_hint_text"
-                        android:inputType="text"
+                        android:inputType="textCapSentences"
                         android:textColorHint="@color/main_grey"
                         tools:hint="Название" />
 
@@ -156,7 +156,7 @@
                         android:layout_height="48dp"
                         android:layout_below="@id/z_2_divide_line"
                         android:layout_alignParentEnd="true"
-                        android:background="@null"
+                        android:background="?attr/selectableItemBackground"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_arrow_right" />
 
@@ -188,6 +188,7 @@
                         android:layout_below="@+id/z_3_divide_line"
                         android:layout_toStartOf="@id/image_button_category"
                         android:layout_toEndOf="@+id/medicine_category_row_text"
+                        android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center_vertical|right"
@@ -200,7 +201,7 @@
                         android:layout_height="48dp"
                         android:layout_below="@id/z_3_divide_line"
                         android:layout_alignParentEnd="true"
-                        android:background="@null"
+                        android:background="?attr/selectableItemBackground"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_arrow_right" />
 
@@ -245,7 +246,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_alignParentEnd="true"
-                        android:background="@null"
+                        android:background="?attr/selectableItemBackground"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_arrow_right" />
 
@@ -281,7 +282,7 @@
                         android:gravity="center_vertical|right"
                         android:hint="0"
                         android:inputType="number"
-                        android:textColorHint="@color/black" />
+                        android:textColorHint="@color/main_grey" />
 
                     <ImageButton
                         android:id="@+id/image_button_max_amount"
@@ -325,7 +326,7 @@
                         android:gravity="center_vertical|right"
                         android:hint="0"
                         android:inputType="number"
-                        android:textColorHint="@color/black" />
+                        android:textColorHint="@color/main_grey" />
 
                     <ImageButton
                         android:id="@+id/image_button_current_amount"
@@ -333,7 +334,7 @@
                         android:layout_height="48dp"
                         android:layout_below="@id/z_5_divide_line"
                         android:layout_alignParentEnd="true"
-                        android:background="@null"
+                        android:background="?attr/selectableItemBackground"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_arrow_right" />
 
@@ -342,7 +343,7 @@
                 <RelativeLayout
                     android:id="@+id/taking_medicine_info_big_element"
                     android:layout_width="0dp"
-                    android:layout_height="148dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
@@ -411,10 +412,13 @@
                         android:layout_below="@+id/z_6_divide_line"
                         android:layout_toStartOf="@id/image_button_amount_per_unit"
                         android:backgroundTint="@color/white"
+                        android:digits="123456"
                         android:gravity="center_vertical|right"
                         android:hint="0"
+                        android:imeOptions="actionDone"
                         android:inputType="number"
-                        android:textColorHint="@color/black" />
+                        android:maxLength="1"
+                        android:textColorHint="@color/search_grey" />
 
                     <ImageButton
                         android:id="@+id/image_button_amount_per_unit"
@@ -464,11 +468,19 @@
                         android:layout_height="48dp"
                         android:layout_below="@id/z_7_divide_line"
                         android:layout_alignParentEnd="true"
-                        android:background="@null"
+                        android:background="?attr/selectableItemBackground"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_arrow_right" />
 
                 </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/planning_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/taking_medicine_info_big_element" />
 
                 <RelativeLayout
                     android:id="@+id/notes_element"
@@ -481,7 +493,7 @@
                     android:background="@drawable/medicine_information_item_round_corners"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/taking_medicine_info_big_element">
+                    app:layout_constraintTop_toBottomOf="@id/planning_layout">
 
                     <EditText
                         android:id="@+id/notes_text"
@@ -504,14 +516,14 @@
                     android:layout_height="38dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginVertical="16dp"
-                    app:layout_constraintTop_toBottomOf="@+id/notes_element"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:backgroundTint="@color/pink"
                     android:gravity="center_vertical"
                     android:text="@string/delete"
                     android:textColorHint="@color/red"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/notes_element"
                     tools:hint="Удалить " />
 
                 <View

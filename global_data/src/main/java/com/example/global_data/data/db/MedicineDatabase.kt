@@ -1,17 +1,19 @@
-package com.example.global_data.data
+package com.example.global_data.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.global_data.data.Medicine
 
-@Database(entities = [Medicine::class], version = 2)
+@Database(entities = [Medicine::class, Event::class], version = 1)
 abstract class MedicineDatabase : RoomDatabase() {
 
     abstract fun medicinesDao(): MedicinesDao
+    abstract fun eventsDao(): EventsDao
 
     companion object {
-        private const val DATABASE_NAME = "medicine_d"
+        private const val DATABASE_NAME = "medicines_basedd"
 
         @Volatile
         private var instance: MedicineDatabase? = null

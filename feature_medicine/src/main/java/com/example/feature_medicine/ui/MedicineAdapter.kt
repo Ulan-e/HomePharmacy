@@ -39,7 +39,8 @@ class MedicineAdapter(
         val currentItem = medicinesListFiltered[position]
         holder.binding.root.setOnClickListener { listener.onItemClick(currentItem) }
         holder.binding.medicineNameText.text = currentItem.medicineName
-        holder.binding.medicineAmountText.text = currentItem.medicineMaxAmount
+        holder.binding.medicineAmountText.text =
+                "${currentItem.medicineCurrentAmount}/${currentItem.medicineMaxAmount}"
 
         val simpleStringToDataFormat = SimpleDateFormat("dd/MM/yy")
         val dateToConvert = simpleStringToDataFormat.parse(currentItem.expirationDate)
@@ -48,6 +49,18 @@ class MedicineAdapter(
         val simpleDateFormatForMonth = SimpleDateFormat("MMMM")
         val monthLocaleName = simpleDateFormatForMonth.format(dateToConvert)
         holder.binding.medicineExpirationDateText.text = "$monthLocaleName $yearText"
+
+        if (currentItem.medicineCurrentAmount <= 3) {
+            holder.binding.medicineItemAttentionIconDivideLine.visibility = View.VISIBLE
+            holder.binding.allMedicineWarningIcon.visibility = View.VISIBLE
+            holder.binding.medicineAmountText.setTextColor(ContextCompat.getColor(holder.binding.allMedicineWarningIcon.context, R.color.orange))
+            holder.binding.medicineExpirationDateText.setTextColor(Color.BLACK)
+        } else if (currentItem.medicineCurrentAmount <= 0) {
+            holder.binding.medicineItemAttentionIconDivideLine.visibility = View.VISIBLE
+            holder.binding.allMedicineWarningIcon.visibility = View.VISIBLE
+            holder.binding.medicineAmountText.setTextColor(Color.RED)
+            holder.binding.medicineExpirationDateText.setTextColor(Color.BLACK)
+        }
 
         when (getMedicineExpiringStatus(currentItem)) {
             ExpiringStatus.NOT_EXPIRING -> {
@@ -68,18 +81,6 @@ class MedicineAdapter(
                 holder.binding.medicineExpirationDateText.setTextColor(Color.RED)
                 holder.binding.medicineAmountText.setTextColor(ContextCompat.getColor(holder.binding.allMedicineWarningIcon.context, R.color.main_grey))
             }
-        }
-
-        if (currentItem.medicineCurrentAmount <= 3) {
-            holder.binding.medicineItemAttentionIconDivideLine.visibility = View.VISIBLE
-            holder.binding.allMedicineWarningIcon.visibility = View.VISIBLE
-            holder.binding.medicineAmountText.setTextColor(ContextCompat.getColor(holder.binding.allMedicineWarningIcon.context, R.color.orange))
-            holder.binding.medicineExpirationDateText.setTextColor(Color.BLACK)
-        } else if (currentItem.medicineCurrentAmount <= 0) {
-            holder.binding.medicineItemAttentionIconDivideLine.visibility = View.VISIBLE
-            holder.binding.allMedicineWarningIcon.visibility = View.VISIBLE
-            holder.binding.medicineAmountText.setTextColor(Color.RED)
-            holder.binding.medicineExpirationDateText.setTextColor(Color.BLACK)
         }
     }
 

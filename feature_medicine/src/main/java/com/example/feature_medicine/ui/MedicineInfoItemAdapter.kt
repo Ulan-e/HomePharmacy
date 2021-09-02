@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat
 
 class MedicineInfoItemAdapter : RecyclerView.Adapter<MedicineInfoItemAdapter.ViewHolder>() {
 
-
     var medicineInfoItemsList: ArrayList<MedicineInfoItem> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

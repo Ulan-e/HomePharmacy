@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity
 data class Medicine(
-        @PrimaryKey var id: Int = 0,
+        @PrimaryKey(autoGenerate = true) var id: Int = 0,
         var medicineName: String = "",
         var medicineType: String = "",
         var medicineCategory: String = "",
@@ -18,7 +18,7 @@ data class Medicine(
         var finishingTakingDate: String = "",
         var medicineMaxAmount: String = "",
         var medicineCurrentAmount: Int = 0,
-        var isAmountCountable: Boolean = false,
+        var isAmountCountable: Boolean = true,
         var medicineTakingOftenness: String = "",
         var notes: String = ""
 ) : Parcelable

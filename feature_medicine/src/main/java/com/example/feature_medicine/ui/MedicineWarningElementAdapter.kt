@@ -8,12 +8,8 @@ import com.example.feature_medicine.R
 import com.example.feature_medicine.data.MedicineWarningElement
 import com.example.feature_medicine.databinding.AllMedicineElementBinding
 import com.example.feature_medicine.databinding.MedicineWarningElementBinding
-import com.example.global_data.data.PersonalMedicineRepository
-
-
 private const val FIRST_ITEM_VIEW_TYPE = 1
 private const val OTHER_ITEMS_VIEW_TYPE = 2
-
 
 class MedicineWarningElementAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -55,6 +51,11 @@ class MedicineWarningElementAdapter : RecyclerView.Adapter<RecyclerView.ViewHold
                 onAllMedicineItemClick?.invoke()
             }
         }
+    }
+
+    fun setAllMedicinesSize(size: Int){
+        this.personalMedicineNumber = size
+        notifyDataSetChanged()
     }
 
     inner class MedicineWarningElementViewHolder(view: View) : RecyclerView.ViewHolder(view) {

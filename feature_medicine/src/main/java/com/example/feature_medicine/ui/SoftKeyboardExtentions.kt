@@ -1,4 +1,4 @@
-package com.example.homepharmacy
+package com.example.feature_medicine.ui
 
 import android.app.Activity
 import android.content.Context
