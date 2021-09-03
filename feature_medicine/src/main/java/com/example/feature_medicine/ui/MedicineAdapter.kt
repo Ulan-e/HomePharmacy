@@ -118,7 +118,7 @@ class MedicineAdapter(
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charString = constraint?.toString() ?: ""
+                val charString = constraint?.toString()?.toLowerCase(Locale.ROOT) ?: ""
                 if (charString.isEmpty()) medicinesListFiltered = medicinesList else {
                     val filteredList = ArrayList<Medicine>()
                     medicinesList

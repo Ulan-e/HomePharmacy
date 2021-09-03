@@ -53,8 +53,6 @@ class AllMedicineFragment : Fragment(), SearchView.OnQueryTextListener {
         val medicineViewModelFactory = MedicineViewModelFactory(medicineRepository)
         mainViewModel = ViewModelProvider(this, medicineViewModelFactory).get(MainViewModel::class.java)
 
-
-
         val args = AllMedicineFragmentArgs.fromBundle(requireArguments())
         category = args.category
         isSearchMode = args.isSearchMode
