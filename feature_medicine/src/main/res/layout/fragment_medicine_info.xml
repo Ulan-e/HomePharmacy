@@ -70,6 +70,7 @@
                         android:backgroundTint="@color/white"
                         android:gravity="center_vertical"
                         android:hint="@string/medicine_name_hint_text"
+                        android:imeOptions="actionDone"
                         android:inputType="textCapSentences"
                         android:textColorHint="@color/main_grey"
                         tools:hint="Название" />
@@ -281,6 +282,7 @@
                         android:backgroundTint="@color/white"
                         android:gravity="center_vertical|right"
                         android:hint="0"
+                        android:imeOptions="actionDone"
                         android:inputType="number"
                         android:textColorHint="@color/main_grey" />
 
@@ -325,6 +327,7 @@
                         android:backgroundTint="@color/white"
                         android:gravity="center_vertical|right"
                         android:hint="0"
+                        android:imeOptions="actionDone"
                         android:inputType="number"
                         android:textColorHint="@color/main_grey" />
 

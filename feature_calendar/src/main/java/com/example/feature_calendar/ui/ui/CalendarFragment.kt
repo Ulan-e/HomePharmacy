@@ -58,6 +58,7 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
 
     private var events = mutableListOf<aptekaEvent>()
     private var medicines = mutableListOf<Medicine>()
+    private lateinit var calendarProvider: CalendarProvider
 
     private lateinit var model: CalendarViewModel
     private val eventsAdapter: EventsAdapter by lazy {
@@ -78,6 +79,8 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
 
         checkPermissions()
 
+        getCalendarEvents()
+
         val cal = Calendar.getInstance()
         setEventBySelectedDate(cal)
 
@@ -87,8 +90,6 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
             medicines.clear()
             medicines.addAll(it)
         })
-
-        getCalendarEvents()
 
         initBottomSheetDialog()
 
@@ -139,6 +140,7 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
         for (e in events) {
             if (e.rRule.contains("DAILY")) {
                 if (pickedDate >= e.dTStart && pickedDate <= e.lastDate) {
+                    Log.d("ulanbekk", "event ${e.status}")
                     pickedEvents.add(e)
                 }
             }
@@ -161,6 +163,9 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     }
 
     private fun showCurrentEvents(data: ArrayList<aptekaEvent>) = with(binding) {
+        data.forEach {
+            Log.d("apteka", " title ${it.title} status ${it.status} visibility ${it.visible}")
+        }
         if (data.isNotEmpty()) {
             binding.emptyList.visibility = View.GONE
         } else {
@@ -168,7 +173,7 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
         }
         val resultData = mutableListOf<CalendarEvent>()
         data.forEach { resultData.add(mapLibraryEventToEvent(it)) }
-        eventsAdapter.setData(resultData as java.util.ArrayList<CalendarEvent>)
+        eventsAdapter.setData(resultData as ArrayList<CalendarEvent>)
         eventsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         eventsRecyclerView.adapter = eventsAdapter
     }
@@ -179,7 +184,8 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
                     medicineName = event.title,
                     medicineCount = event.description,
                     time = event.dTStart,
-                    status = event.status
+                    status = event.status,
+                    visibiltity = event.visible
             )
 
     private fun initBottomSheetDialog() = with(binding) {
@@ -227,13 +233,10 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     }
 
     private fun getCalendarEvents() {
-        val calendarProvider = CalendarProvider(context)
+        calendarProvider = CalendarProvider(context)
         val fetchedEvents = calendarProvider.getEvents(CALENDAR_ID).list
         if (fetchedEvents != null) {
             events.addAll(fetchedEvents)
-            for (item in events) {
-                // Log.d("ulanbek", "event.id ${item.id}")
-            }
         }
     }
 
@@ -248,19 +251,22 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     }
 
     override fun onAcceptEvent(position: Int, event: CalendarEvent) {
-        val newEvent = CalendarEvent(
-                medicineName = event.medicineName,
-                medicineCount = event.medicineCount,
-                time = event.time,
-                status = event.status
-        )
         medicines.forEach {
             if (it.medicineName == event.medicineName) {
                 var newCount = it.medicineCurrentAmount
                 if (it.medicineCurrentAmount != 0) {
                     it.medicineCurrentAmount = newCount.dec()
-                    Log.d("ulanbek", "newMedicine ====>>>  ${it.medicineName} ${it.medicineCurrentAmount}")
                     model.updateEvent(it)
+               /*     val fetchedEvents = calendarProvider.getEvents(CALENDAR_ID).list
+                    fetchedEvents.forEach {
+                        it.visible = false
+                        Log.d("ulanbekkk", "before it.visible ${it.visible}")
+                        calendarProvider.getEvent(it.id)
+                        calendarProvider.update(it)
+                        Log.d("ulanbekkk", "after it.visible ${it.visible}")
+                    }*/
+
+
                 } else {
                     Snackbar.make(binding.root, "${it.medicineType} закончились", Snackbar.LENGTH_SHORT).show()
                 }

@@ -10,5 +10,5 @@ data class CalendarEvent(
         var medicineName: String = "",
         var medicineCount: String = "",
         var status: String = "",
-        var visibiltity: Int = -1
+        var visibiltity: Boolean = false
 ) : Parcelable

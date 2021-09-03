@@ -18,12 +18,15 @@ class AllMedicineCustomToolbar
         _binding = AllMedicineCustomToolbarBinding.bind(view)
     }
 
+
     fun setListenerSearchView(listener: SearchView.OnQueryTextListener) {
         _binding?.searchView?.setOnQueryTextListener(listener)
     }
 
     fun setClickListenerSearchView() {
-        _binding?.searchView?.onActionViewExpanded()
+        _binding?.searchView?.setOnClickListener {
+            _binding?.searchView?.onActionViewExpanded()
+        }
     }
 
     fun setOnClickListenerBackButton(click: (() -> Unit)? = null) {
