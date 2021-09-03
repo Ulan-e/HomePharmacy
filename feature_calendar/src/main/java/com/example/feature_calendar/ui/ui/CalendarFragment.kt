@@ -23,8 +23,10 @@ import com.example.feature_calendar.ui.data.CalendarEvent
 import com.example.feature_calendar.ui.data.EventsRepository
 import com.example.feature_calendar.ui.domain.CalendarViewModel
 import com.example.feature_calendar.ui.domain.CalendarViewModelFactory
+import com.example.global_data.data.Medicine
 import com.example.global_data.data.db.MedicineDatabase
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -55,6 +57,7 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     private val WEEK: Long = 7 * 24 * 60 * 60 * 1000
 
     private var events = mutableListOf<aptekaEvent>()
+    private var medicines = mutableListOf<Medicine>()
 
     private lateinit var model: CalendarViewModel
     private val eventsAdapter: EventsAdapter by lazy {
@@ -79,6 +82,11 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
         setEventBySelectedDate(cal)
 
         initViewModel()
+
+        model.localMedicines.observe(viewLifecycleOwner, {
+            medicines.clear()
+            medicines.addAll(it)
+        })
 
         getCalendarEvents()
 
@@ -137,26 +145,25 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
             if (e.rRule.contains("WEEKLY")) {
                 if (pickedDate >= e.dTStart && pickedDate <= e.lastDate) {
                     for (week in e.dTStart..e.lastDate step WEEK) {
-                        val d1 = dateFormat.format(Date(week))
-                        val d2 = dateFormat.format(pickedDate)
+                        val eventWeek = dateFormat.format(Date(week))
+                        val clickedDate = dateFormat.format(pickedDate)
 
-                        Log.d("ulanbek", "d1 $d1 ")
-                        Log.d("ulanbek", "d2 $d2")
+                        Log.d("ulanbek", "eventWeek $eventWeek === clickedDate $clickedDate ")
 
-                        if (d1 == d2) {
+                        if (eventWeek == clickedDate) {
                             pickedEvents.add(e)
                         }
                     }
                 }
             }
         }
-            showCurrentEvents(pickedEvents as ArrayList<aptekaEvent>)
+        showCurrentEvents(pickedEvents as ArrayList<aptekaEvent>)
     }
 
     private fun showCurrentEvents(data: ArrayList<aptekaEvent>) = with(binding) {
-        if(data.isNotEmpty()) {
+        if (data.isNotEmpty()) {
             binding.emptyList.visibility = View.GONE
-        }else{
+        } else {
             binding.emptyList.visibility = View.VISIBLE
         }
         val resultData = mutableListOf<CalendarEvent>()
@@ -222,7 +229,6 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     private fun getCalendarEvents() {
         val calendarProvider = CalendarProvider(context)
         val fetchedEvents = calendarProvider.getEvents(CALENDAR_ID).list
-        Log.d("ulanbek", "fetchedEvents ${fetchedEvents.size}")
         if (fetchedEvents != null) {
             events.addAll(fetchedEvents)
             for (item in events) {
@@ -242,17 +248,28 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     }
 
     override fun onAcceptEvent(position: Int, event: CalendarEvent) {
-       // eventsAdapter.removeItem(position)
         val newEvent = CalendarEvent(
                 medicineName = event.medicineName,
                 medicineCount = event.medicineCount,
                 time = event.time,
                 status = event.status
         )
-
+        medicines.forEach {
+            if (it.medicineName == event.medicineName) {
+                var newCount = it.medicineCurrentAmount
+                if (it.medicineCurrentAmount != 0) {
+                    it.medicineCurrentAmount = newCount.dec()
+                    Log.d("ulanbek", "newMedicine ====>>>  ${it.medicineName} ${it.medicineCurrentAmount}")
+                    model.updateEvent(it)
+                } else {
+                    Snackbar.make(binding.root, "${it.medicineType} закончились", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun deleteEvent(eventId: Int) {
+        eventsAdapter.notifyDataSetChanged()
         var deleteUri: Uri? = null
         deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, java.lang.String.valueOf(eventId).toLong())
         val rows: Int = requireContext().contentResolver.delete(deleteUri, null, null)

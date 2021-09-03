@@ -149,7 +149,6 @@ class MedicineRepository(
         val medicines = medicineDatabase.medicinesDao().fetchAll()
         this.medicines.clear()
         this.medicines.addAll(medicines)
-        Log.d(TAG, "Size of medicines ${medicines.size}")
         return medicines
     }
 

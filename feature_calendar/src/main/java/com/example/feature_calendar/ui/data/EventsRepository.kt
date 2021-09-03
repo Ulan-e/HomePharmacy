@@ -1,6 +1,7 @@
 package com.example.feature_calendar.ui.data
 
 import android.util.Log
+import com.example.global_data.data.Medicine
 import com.example.global_data.data.db.Event
 import com.example.global_data.data.db.MedicineDatabase
 
@@ -12,22 +13,23 @@ class EventsRepository(
         private const val TAG = "MedicineRepository"
     }
 
-    private var events = mutableListOf<Event>()
+    private var medicines = mutableListOf<Medicine>()
 
-    suspend fun getEvents(): List<Event> {
-        val events = medicineDatabase.eventsDao().fetchAll()
-        this.events.clear()
-        this.events.addAll(events)
-        Log.d(TAG, "Size of events ${events.size}")
-        return events
+    suspend fun getEvents(): List<Medicine> {
+        val medicines = medicineDatabase.medicinesDao().fetchAll()
+        this.medicines.clear()
+        this.medicines.addAll(medicines)
+        Log.d(TAG, "Size of medicines ${medicines.size}")
+        return medicines
     }
 
-    suspend fun updateEvent(event: Event) {
-        medicineDatabase.eventsDao().update(event)
-        Log.d(TAG, "inserted event $event")
+    suspend fun updateEvent(medicine: Medicine) {
+        medicineDatabase.medicinesDao().update(medicine)
+        Log.d(TAG, "updated medicine $medicine")
     }
-    suspend fun deleteeEvent(event: Event) {
-        medicineDatabase.eventsDao().delete(event)
-        Log.d(TAG, "inserted event $event")
+
+    suspend fun deleteEvent(medicine: Medicine) {
+        medicineDatabase.medicinesDao().delete(medicine)
+        Log.d(TAG, "deleted medicine $medicine")
     }
 }

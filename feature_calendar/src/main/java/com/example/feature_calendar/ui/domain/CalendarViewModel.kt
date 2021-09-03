@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.feature_calendar.ui.data.EventsRepository
+import com.example.global_data.data.Medicine
 import com.example.global_data.data.db.Event
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -17,18 +18,16 @@ class CalendarViewModel(
     @SuppressLint("SimpleDateFormat")
     private val sdf = SimpleDateFormat("dd-M-yyyy")
 
-    val localEvents = MutableLiveData<List<Event>>()
+    val localMedicines = MutableLiveData<List<Medicine>>()
 
-    fun getLocalEvents(date: Date) {
+    init {
+        getLocalMedicines()
+    }
+
+    private fun getLocalMedicines() {
         viewModelScope.launch {
-            val newEvents = mutableListOf<Event>()
             val medicines = eventsRepository.getEvents()
-            for (item in medicines) {
-                if (newCompare(date, item.time)) {
-                    newEvents.add(item)
-                }
-            }
-            localEvents.postValue(newEvents)
+            localMedicines.postValue(medicines)
         }
     }
 
@@ -41,15 +40,15 @@ class CalendarViewModel(
         return sdf.format(pickedDate).equals(sdf.format(convertStringToDate(dbDateStr)))
     }
 
-    fun updateEvent(event: Event) {
+    fun updateEvent(medicine: Medicine) {
         viewModelScope.launch {
-            eventsRepository.updateEvent(event)
+            eventsRepository.updateEvent(medicine)
         }
     }
 
-    fun deleteEvent(event: Event) {
+    fun deleteEvent(medicine: Medicine) {
         viewModelScope.launch {
-            eventsRepository.deleteeEvent(event)
+            eventsRepository.deleteEvent(medicine)
         }
     }
 }

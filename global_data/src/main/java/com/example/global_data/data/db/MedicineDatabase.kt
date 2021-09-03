@@ -13,7 +13,7 @@ abstract class MedicineDatabase : RoomDatabase() {
     abstract fun eventsDao(): EventsDao
 
     companion object {
-        private const val DATABASE_NAME = "medicines_basedd"
+        private const val DATABASE_NAME = "database"
 
         @Volatile
         private var instance: MedicineDatabase? = null

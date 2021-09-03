@@ -167,7 +167,7 @@ class MedicineInfoFragment : Fragment() {
                 val chosenRadioButton = group.findViewById<RadioButton>(checkedId)
                 zTextViewTakingOftenness.text = chosenRadioButton?.text
                 setRepeatType(chosenRadioButton?.text.toString())
-                currentMedicine.medicineTakingOftenness = chosenRadioButton?.text.toString()
+                currentMedicine.medicineTakingOftennessType = chosenRadioButton?.text.toString()
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
@@ -315,7 +315,7 @@ class MedicineInfoFragment : Fragment() {
                     stringToMark = currentMedicine.medicineCategory
                 }
                 OFTENNESS_RADIO_GROUP_ID -> {
-                    stringToMark = currentMedicine.medicineTakingOftenness
+                    stringToMark = currentMedicine.medicineTakingOftennessType
                 }
             }
             clearRadioGroup(radioGroup)
@@ -471,6 +471,8 @@ class MedicineInfoFragment : Fragment() {
         zEditTextCurrentAmount.setText(medicine.medicineCurrentAmount.toString())
         zEditTextAmountPerUnit.setText(medicine.medicineTakingOftenness)
         zTextViewFinishingDate.text = medicine.finishingTakingDate
+        Log.d("ulanbek","medicine.medicineTakingOftenness ${medicine.medicineTakingOftenness}" )
+        zTextViewTakingOftenness.text = medicine.medicineTakingOftennessType
         notesText.setText(medicine.notes)
 
         zTextViewType.text = medicine.medicineType

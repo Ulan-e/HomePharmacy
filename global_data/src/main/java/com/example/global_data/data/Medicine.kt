@@ -20,5 +20,6 @@ data class Medicine(
         var medicineCurrentAmount: Int = 0,
         var isAmountCountable: Boolean = true,
         var medicineTakingOftenness: String = "",
+        var medicineTakingOftennessType: String = "",
         var notes: String = ""
 ) : Parcelable
