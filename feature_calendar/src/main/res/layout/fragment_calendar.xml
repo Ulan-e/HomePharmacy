@@ -19,12 +19,12 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <CalendarView
-            android:minDate="8/9/2021"
             android:id="@+id/medicine_calendar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:dateTextAppearance="@style/CalendarViewCustomText"
             android:firstDayOfWeek="@integer/material_motion_duration_long_1"
+            android:minDate="8/9/2021"
             android:theme="@style/Theme.HomePharmacy"
             android:weekDayTextAppearance="@style/CalendarViewCustomText"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,9 +56,9 @@
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:textSize="20sp"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/bottom_sheet_state_arrow"
@@ -76,6 +76,20 @@
                         android:background="@color/background_grey"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/current_date_text_view" />
+
+                    <TextView
+                        android:id="@+id/emptyList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="90dp"
+                        android:text="Нет лекарств на этот день"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </FrameLayout>

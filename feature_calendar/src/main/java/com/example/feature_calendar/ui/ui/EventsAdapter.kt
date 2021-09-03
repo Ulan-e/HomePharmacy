@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.feature_calendar.R
 import com.example.feature_calendar.databinding.ItemEventBinding
@@ -39,19 +40,19 @@ class EventsAdapter(
         holder.binding.medicineStatus.setOnClickListener {
             listener.onAcceptEvent(position, currentItem)
         }
-        holder.binding.medicineName.text = currentItem.name
-        holder.binding.pillsCount.text = currentItem.pillsCount
+        holder.binding.medicineName.text = currentItem.medicineName
+        holder.binding.pillsCount.text = currentItem.medicineCount
 
-        /* val expirationDate = dateFormat.parse(currentItem.time)
-         val time = timeFormat.format(expirationDate.time)
-         holder.binding.textTime.text = time
-         if (expirationDate.time - Date().time <= 0) {
-             holder.binding.medicineStatus.text = "Пропущенно"
-             holder.binding.medicineStatus.setTextColor(ContextCompat.getColor(holder.binding.root.context, R.color.red))
-         } else {
-             holder.binding.medicineStatus.text = "Принять"
-             holder.binding.medicineStatus.setTextColor(ContextCompat.getColor(holder.binding.root.context, R.color.main_green))
-         }*/
+        val time = timeFormat.format(currentItem.time)
+        holder.binding.textTime.text = time
+
+       /* if (currentItem.time - Date().time >= 0) {
+            holder.binding.medicineStatus.text = "Пропущенно"
+            holder.binding.medicineStatus.setTextColor(ContextCompat.getColor(holder.binding.root.context, R.color.red))
+        } else {*/
+            holder.binding.medicineStatus.text = "Принять"
+            holder.binding.medicineStatus.setTextColor(ContextCompat.getColor(holder.binding.root.context, R.color.main_green))
+                    //}
     }
 
     fun removeItem(position: Int) {

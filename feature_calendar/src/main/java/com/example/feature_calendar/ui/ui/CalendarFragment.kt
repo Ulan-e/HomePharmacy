@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.CalendarContract
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +52,8 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     @SuppressLint("SimpleDateFormat")
     private val dateFormat = SimpleDateFormat("dd/MM/yy")
 
+    private val WEEK: Long = 7 * 24 * 60 * 60 * 1000
+
     private var events = mutableListOf<aptekaEvent>()
 
     private lateinit var model: CalendarViewModel
@@ -71,6 +74,9 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
         super.onViewCreated(view, savedInstanceState)
 
         checkPermissions()
+
+        val cal = Calendar.getInstance()
+        setEventBySelectedDate(cal)
 
         initViewModel()
 
@@ -110,27 +116,49 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun handleCalendarClick() = with(binding) {
         medicineCalendar.setOnDateChangeListener { _, i, i1, i2 ->
-            /*val currentLocalDate: LocalDate = LocalDate.of(i, i1 + 1, i2)
-            val currentDate = java.sql.Date.from(currentLocalDate.atStartOfDay()
-                    .atZone(ZoneId.systemDefault())
-                    .toInstant())*/
             val pickedCalendar = Calendar.getInstance()
             pickedCalendar.set(i, i1, i2)
 
-            var pickedEvents = mutableListOf<aptekaEvent>()
-            val pickedDate = pickedCalendar.timeInMillis
-            for (e in events) {
-                if (pickedDate >= e.dTStart && pickedDate <= e.lastDate) {
-                    pickedEvents.add(e)
-                }
-            }
-            showCurrentEvents(pickedEvents as ArrayList<aptekaEvent>)
+            setEventBySelectedDate(pickedCalendar)
 
             currentDateTextView.text = dateToCurrentDateText(pickedCalendar.time, i2)
         }
     }
 
+    private fun setEventBySelectedDate(calendar: Calendar) {
+        val pickedEvents = mutableListOf<aptekaEvent>()
+        val pickedDate = calendar.timeInMillis
+        for (e in events) {
+            if (e.rRule.contains("DAILY")) {
+                if (pickedDate >= e.dTStart && pickedDate <= e.lastDate) {
+                    pickedEvents.add(e)
+                }
+            }
+            if (e.rRule.contains("WEEKLY")) {
+                if (pickedDate >= e.dTStart && pickedDate <= e.lastDate) {
+                    for (week in e.dTStart..e.lastDate step WEEK) {
+                        val d1 = dateFormat.format(Date(week))
+                        val d2 = dateFormat.format(pickedDate)
+
+                        Log.d("ulanbek", "d1 $d1 ")
+                        Log.d("ulanbek", "d2 $d2")
+
+                        if (d1 == d2) {
+                            pickedEvents.add(e)
+                        }
+                    }
+                }
+            }
+        }
+            showCurrentEvents(pickedEvents as ArrayList<aptekaEvent>)
+    }
+
     private fun showCurrentEvents(data: ArrayList<aptekaEvent>) = with(binding) {
+        if(data.isNotEmpty()) {
+            binding.emptyList.visibility = View.GONE
+        }else{
+            binding.emptyList.visibility = View.VISIBLE
+        }
         val resultData = mutableListOf<CalendarEvent>()
         data.forEach { resultData.add(mapLibraryEventToEvent(it)) }
         eventsAdapter.setData(resultData as java.util.ArrayList<CalendarEvent>)
@@ -141,10 +169,10 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     private fun mapLibraryEventToEvent(event: aptekaEvent) =
             CalendarEvent(
                     id = event.id,
-                    name = event.description,
-                    pillsCount = event.description,
-                    medicineName = event.description,
-                    time = "08:00"
+                    medicineName = event.title,
+                    medicineCount = event.description,
+                    time = event.dTStart,
+                    status = event.status
             )
 
     private fun initBottomSheetDialog() = with(binding) {
@@ -194,8 +222,12 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     private fun getCalendarEvents() {
         val calendarProvider = CalendarProvider(context)
         val fetchedEvents = calendarProvider.getEvents(CALENDAR_ID).list
+        Log.d("ulanbek", "fetchedEvents ${fetchedEvents.size}")
         if (fetchedEvents != null) {
             events.addAll(fetchedEvents)
+            for (item in events) {
+                // Log.d("ulanbek", "event.id ${item.id}")
+            }
         }
     }
 
@@ -210,13 +242,14 @@ class CalendarFragment : Fragment(), EventsAdapter.Listener {
     }
 
     override fun onAcceptEvent(position: Int, event: CalendarEvent) {
-        eventsAdapter.removeItem(position)
+       // eventsAdapter.removeItem(position)
         val newEvent = CalendarEvent(
-                name = event.name,
                 medicineName = event.medicineName,
+                medicineCount = event.medicineCount,
                 time = event.time,
-                pillsCount = event.pillsCount
+                status = event.status
         )
+
     }
 
     private fun deleteEvent(eventId: Int) {

@@ -12,7 +12,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
-        android:textSize="18sp"
+        android:textSize="19sp"
         android:layout_marginHorizontal="23dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:paddingEnd="10dp"
-            android:textColor="@color/pink"
+            android:textColor="@color/black"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

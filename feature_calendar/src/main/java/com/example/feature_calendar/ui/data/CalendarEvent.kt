@@ -6,8 +6,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CalendarEvent(
         var id: Long = 0L,
-        var name: String = "",
+        var time: Long,
         var medicineName: String = "",
-        var time: String,
-        var pillsCount: String = ""
+        var medicineCount: String = "",
+        var status: String = "",
+        var visibiltity: Int = -1
 ) : Parcelable

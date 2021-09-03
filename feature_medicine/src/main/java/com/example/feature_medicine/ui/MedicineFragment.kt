@@ -47,10 +47,10 @@ class MedicineFragment : Fragment() {
             (notificationsRecyclerView?.adapter as MedicineWarningElementAdapter).setAllMedicinesSize(it.size)
         })
 
-       /* binding.medicineSearchBar.setOnFocusListener {
+        binding.medicineSearchBar.setOnFocusListener {
              val action = MedicineFragmentDirections.actionDrugsDestinationFragmentToAllMedicineDestinationFragment("all", true)
             findNavController().navigate(action)
-        }*/
+        }
 
         //initializing views
         medicineToolbar = binding.medicineToolbar

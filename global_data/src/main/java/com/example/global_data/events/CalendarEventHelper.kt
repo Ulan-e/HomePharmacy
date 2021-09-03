@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.util.Log
 
@@ -19,10 +20,11 @@ class CalendarEventHelper(private val context: Context) {
         try {
             val evtUri: Uri? =
                     getCalendarUri("events")?.let {
-                        context.contentResolver
-                                .insert(it, event?.let { it1 -> CalendarEvent.toContentValues(isWeek, it1) })
+                        context.contentResolver.insert(it, event?.let { it1 -> CalendarEvent.toContentValues(isWeek, it1) })
                     }
+            //val rmdUri : Uri? = getCalendarUri("reminders")?.let { context.contentResolver.insert(it, event?.let { it2 ->CalendarEvent.setReminder(it2) }) }
             Log.d("ulancal", "event URI $evtUri")
+            //Log.d("ulancal", "reminder URI $rmdUri")
         } catch (t: Throwable) {
             Log.e("ulancal", "event Error", t);
         }

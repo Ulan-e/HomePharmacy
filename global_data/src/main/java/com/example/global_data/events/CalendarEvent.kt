@@ -1,6 +1,7 @@
 package com.example.global_data.events
 
 import android.content.ContentValues
+import android.content.Context
 import android.provider.CalendarContract
 import java.text.SimpleDateFormat
 import java.util.*
@@ -65,6 +66,14 @@ data class CalendarEvent(
             // If you want the event until 30/01/2012, you must add one day from our day because UNTIL in RRule sets events before the last day
             dt.add(Calendar.DATE, 1)
             return yyyyMMdd.format(dt.time)
+        }
+
+        fun setReminder(event: CalendarEvent) : ContentValues{
+            val reminder = ContentValues()
+            reminder.put("event_id", event.id)
+            reminder.put("minutes", 10)
+            reminder.put("method", 1)
+            return reminder
         }
     }
 }

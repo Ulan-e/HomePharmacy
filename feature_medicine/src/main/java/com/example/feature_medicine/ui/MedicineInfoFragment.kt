@@ -99,7 +99,7 @@ class MedicineInfoFragment : Fragment() {
         val medicineViewModelFactory = MedicineViewModelFactory(medicineRepository)
         model = ViewModelProvider(this, medicineViewModelFactory).get(MainViewModel::class.java)
 
-        createCustomView(1, "Тип")
+        setRepeatType("Еженедельно")
 
         createOfftenesText()
 
@@ -135,6 +135,7 @@ class MedicineInfoFragment : Fragment() {
         }
 
         imageButtonCategory.setOnClickListener {
+
             medicineRadioButtonListTitle.text = getString(R.string.categories_title)
             fullingARadioGroup(medicineRepository.medicineCategoriesList, medicineRadioButtonListRadioGroup, CATEGORIES_RADIO_GROUP_ID)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -374,6 +375,31 @@ class MedicineInfoFragment : Fragment() {
                 .show()
     }
 
+    private fun showingTimePickerDialog(tag: Int) {
+        val currentDateTime = Calendar.getInstance()
+        val startYear = currentDateTime.get(Calendar.YEAR)
+        val startMonth = currentDateTime.get(Calendar.MONTH)
+        val startDay = currentDateTime.get(Calendar.DAY_OF_MONTH)
+        val startHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
+        val startMinute = currentDateTime.get(Calendar.MINUTE)
+
+        DatePickerDialog(requireContext(), { _, year, month, day ->
+            TimePickerDialog(requireContext(), { _, hour, minute ->
+                val pickedDateTime = Calendar.getInstance()
+                pickedDateTime.set(year, month, day, hour, minute)
+
+                val text = SimpleDateFormat("dd-M-yyyy hh:mm:ss").format(pickedDateTime.time)
+                val time = SimpleDateFormat("HH:mm").format(pickedDateTime.time)
+                val linearLayout = binding.planningLayout as LinearLayout
+                val customType = linearLayout.findViewWithTag<CustomTypeView>(tag) as CustomTypeView
+
+                customType.setTakingTime(time)
+                eventStartTime = pickedDateTime.timeInMillis
+
+            }, startHour, startMinute, false).show()
+        }, startYear, startMonth, startDay).show()
+    }
+
     private fun showDeleteConfirmationDialog(view: View) {
         val builder = AlertDialog.Builder(requireContext()).create()
         val dialogView: View = layoutInflater.inflate(R.layout.dialog_delete_confirmation, null)
@@ -442,13 +468,14 @@ class MedicineInfoFragment : Fragment() {
         zTextViewCategory.text = medicine.medicineCategory
         zEditTextMaxAmount.setText(medicine.medicineMaxAmount)
         zTextViewFreshUntil.text = medicine.expirationDate
-        zEditTextCurrentAmount.setText(medicine.medicineCurrentAmount)
+        zEditTextCurrentAmount.setText(medicine.medicineCurrentAmount.toString())
         zEditTextAmountPerUnit.setText(medicine.medicineTakingOftenness)
         zTextViewFinishingDate.text = medicine.finishingTakingDate
         notesText.setText(medicine.notes)
 
         zTextViewType.text = medicine.medicineType
         setRepeatType(medicine.medicineType)
+        createCustomView(1, medicine.medicineType, false)
     }
 
     private fun setEditModeEnable(isEnable: Boolean) = with(binding) {
@@ -479,7 +506,7 @@ class MedicineInfoFragment : Fragment() {
                     val type = if (currentMedicine.medicineType == "") "таблеток" else currentMedicine.medicineType
 
                     if (count != null) {
-                        createCustomView(count, type)
+                        createCustomView(count, type, false)
                     }
                     hideKeyboard()
                     true
@@ -488,7 +515,7 @@ class MedicineInfoFragment : Fragment() {
         }
     }
 
-    private fun createCustomView(count: Int, type: String) {
+    private fun createCustomView(count: Int, type: String, isWeek: Boolean) {
         val linearLayout = binding.planningLayout as LinearLayout
         linearLayout.removeAllViews()
         for (item in 1..count) {
@@ -500,28 +527,18 @@ class MedicineInfoFragment : Fragment() {
             eventType.tag = item
             val lin = binding.planningLayout as LinearLayout
             eventType.setOnClickListenerAddButton {
-                binding.zTextViewTakingOftenness.text = count.toString()
-                showTimePick(item)
+                if (binding.zTextViewTakingOftenness.text.isNotEmpty()) {
+                    if ("Еженедельно" == binding.zTextViewTakingOftenness.text) {
+                        showingTimePickerDialog(item)
+                    } else if ("Ежедневно" == binding.zTextViewTakingOftenness.text) {
+                        showTimePick(item)
+                    }
+                } else {
+                    Snackbar.make(binding.root, "Выберите частоту приема", Snackbar.LENGTH_SHORT).show()
+                }
             }
             lin.addView(eventType)
         }
-    }
-
-    private fun createCustomView(tag: Int, takingTime: String, type: String) {
-        val linearLayout = binding.planningLayout as LinearLayout
-        linearLayout.removeAllViews()
-        val eventType = CustomTypeView(requireContext())
-        val params = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
-        params.addRule(RelativeLayout.CENTER_IN_PARENT)
-        eventType.layoutParams = params
-        eventType.setTakingTime(takingTime)
-        eventType.setMedicineType(type)
-        eventType.tag = tag
-        val lin = binding.planningLayout as LinearLayout
-        eventType.setOnClickListenerAddButton {
-            showTimePick(tag)
-        }
-        lin.addView(eventType)
     }
 
     private fun createCalendarEvent() = with(binding) {
@@ -562,13 +579,13 @@ class MedicineInfoFragment : Fragment() {
         }
     }
 
-    private fun setWeekOftennessVisibility(isVisible: Boolean)= with(binding){
-        if(isVisible){
+    private fun setWeekOftennessVisibility(isVisible: Boolean) = with(binding) {
+        if (isVisible) {
             oftennessPerUnitRowText.visibility = View.VISIBLE
             zEditTextAmountPerUnit.visibility = View.VISIBLE
             imageButtonAmountPerUnit.visibility = View.VISIBLE
             z7DivideLine.visibility = View.VISIBLE
-        }else{
+        } else {
             oftennessPerUnitRowText.visibility = View.GONE
             zEditTextAmountPerUnit.visibility = View.GONE
             imageButtonAmountPerUnit.visibility = View.GONE
@@ -577,7 +594,7 @@ class MedicineInfoFragment : Fragment() {
     }
 
     private fun setRepeatTakingMedicine(type: String) = with(binding) {
-        when(type){
+        when (type) {
             EVERY_DAY -> {
                 oftennessPerUnitRowText.visibility = View.VISIBLE
                 zEditTextAmountPerUnit.visibility = View.VISIBLE
@@ -593,7 +610,7 @@ class MedicineInfoFragment : Fragment() {
                 imageButtonAmountPerUnit.visibility = View.GONE
                 z7DivideLine.visibility = View.GONE
             }
-            IF_NECESSARY ->{
+            IF_NECESSARY -> {
                 oftennessPerUnitRowText.visibility = View.GONE
                 zEditTextAmountPerUnit.visibility = View.GONE
                 imageButtonAmountPerUnit.visibility = View.GONE

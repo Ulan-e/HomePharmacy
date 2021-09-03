@@ -22,10 +22,11 @@ class CustomSearchBar
     }
 
     fun setOnFocusListener(click: (() -> Unit)? = null) {
-        _binding?.searchBarText?.setOnFocusChangeListener { v, hasFocus ->
+        _binding?.searchBarText?.clearFocus()
+       /* _binding?.searchBarText?.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 click?.invoke()
             }
-        }
+        }*/
     }
 }
